@@ -46,7 +46,11 @@ public:
     
 //FUNCTIONS
 void updateMovement();
+void updateMovementPlayer2();
+
 void update();
+void updateP2();
+
 void render(sf::RenderTarget* target);
 
 };

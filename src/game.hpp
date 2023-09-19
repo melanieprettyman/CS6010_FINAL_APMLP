@@ -30,10 +30,12 @@ private:
     
     //Player
     
-    Player* player;
+    Player* player1;
+    Player* player2;
+
     
     
-    //Private functions
+    //Private methods
     void initializeVariables();
     void initializeWindow();
     void initializePlayer();

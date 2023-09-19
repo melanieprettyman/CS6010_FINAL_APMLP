@@ -47,8 +47,9 @@ Game::~Game(){
     // Cleanup: Delete the game window object when the game ends
     delete this->window;
     
-    // Delete created player
-    delete this->player;
+    // Delete created players
+    delete this->player1;
+    delete this->player2;
 }
 
 
@@ -64,20 +65,20 @@ const bool Game::running()const{
 }
 
 
-
-//=====FUNCTIONS=====
-
 //~~~Initialize player~~~
 void Game::initializePlayer(){
     
-    this->player = new Player();
+    this->player1 = new Player();
+    this->player2 = new Player(400.f, 200.f, sf::Color::Red);
+
 }
 
 //~~~update player~~~
 void Game::updatePlayer(){
     
-    //**********************************
-    this->player->update();
+    this->player1->update();
+    this->player2->updateP2();
+
     
 }
 
@@ -98,7 +99,9 @@ void Game::update(){
 //~~~Render player~~~
 
 void Game::renderPlayer(){
-    this->player->render(this->window);
+    this->player1->render(this->window);
+    this->player2->render(this->window);
+
 }
 
 //~~~Render function~~~

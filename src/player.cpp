@@ -37,16 +37,16 @@ void Player::initiateVariable(){
 
 //~~~update~~~
 void Player::update(){
-    
-    
     //Detecting keybord input and moving the player with that input
     this->updateMovement();
-    
-    
-    
 }
 
-
+//~~~update~~~
+void Player::updateP2(){
+    
+    //Detecting keybord input and moving the player with that input
+    this->updateMovementPlayer2();
+}
 
 //~~~update movement ~~~
 //Detecting keybord input and moving the player with that input
@@ -63,6 +63,26 @@ void Player::updateMovement(){
         this->shape.move(0.f, -this->movementSpeed);
     }
     else if( sf::Keyboard::isKeyPressed (sf::Keyboard::Down) ){
+        this->shape.move(0.f, this->movementSpeed);
+    }
+    
+}
+
+//~~~update movement ~~~
+//Detecting keybord input and moving the player with that input
+void Player::updateMovementPlayer2(){
+    //Keybord input
+    //left
+    if( sf::Keyboard::isKeyPressed (sf::Keyboard::A) ){
+        this->shape.move(-this->movementSpeed, 0.f);
+    }
+    else if( sf::Keyboard::isKeyPressed (sf::Keyboard::D) ){
+        this->shape.move(this->movementSpeed, 0.f);
+    }
+    if( sf::Keyboard::isKeyPressed (sf::Keyboard::W) ){
+        this->shape.move(0.f, -this->movementSpeed);
+    }
+    else if( sf::Keyboard::isKeyPressed (sf::Keyboard::S) ){
         this->shape.move(0.f, this->movementSpeed);
     }
     
