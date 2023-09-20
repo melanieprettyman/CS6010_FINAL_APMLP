@@ -4,14 +4,19 @@
 //
 //  Created by Melanie Prettyman on 9/19/23.
 //
-#pragma once
 
 #ifndef player_hpp
 #define player_hpp
 
 #include <stdio.h>
-#include <stdio.h>
+#pragma once
+
 #include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <ctime>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
@@ -22,20 +27,16 @@
 class Player{
 
 private:
-    sf::RectangleShape shape; 
+    //player characteristics
+    sf::RectangleShape shape;
     void initiateShape(sf::Color a);
     void initiateVariable();
-    
-    
-    //animation
-    
-    
-    //movement
-    
-    //core
-    
-    
     float movementSpeed;
+    
+    //player health
+    int hp;
+    int hpMax;
+
     
     
     
@@ -52,7 +53,10 @@ void update();
 void updateP2();
 
 void render(sf::RenderTarget* target);
+    
+const bool checkCollision();
+const sf::RectangleShape& getShape() const;
+void windowBoundaries(); 
 
 };
-
 #endif /* player_hpp */

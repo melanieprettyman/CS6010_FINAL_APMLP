@@ -15,9 +15,7 @@ Player::Player(float x, float y, sf::Color a){
 }
 
 //Destructor
-Player::~Player(){
-    
-}
+Player::~Player(){}
 
 
 
@@ -29,7 +27,9 @@ void Player::initiateShape(sf::Color a){
 
 //~~~initiate variable~~~
 void Player::initiateVariable(){
-    this->movementSpeed=10.f;
+    this->movementSpeed=5.f;
+    this->hpMax = 10;
+    this->hp = hpMax;
 }
 
 
@@ -41,11 +41,39 @@ void Player::update(){
     this->updateMovement();
 }
 
-//~~~update~~~
+//~~~update player 2~~~
 void Player::updateP2(){
     
     //Detecting keybord input and moving the player with that input
     this->updateMovementPlayer2();
+}
+
+//~~~window boundaries ~~~
+void Player::windowBoundaries(){
+    auto newPosition = shape.getPosition();
+      newPosition.x += 0;
+      newPosition.y += 0;
+    
+    //left
+      if(newPosition.x < 0){
+        newPosition.x += 1280;
+      }
+    //right
+      if(newPosition.x > 1280){
+        newPosition.x -= 1280;
+       
+      }
+    //top
+      if(newPosition.y < 0){
+        newPosition.y += 720;
+       
+      }
+    //bottom
+      if(newPosition.y > 720){
+        newPosition.y -= 720;
+       
+      }
+      shape.setPosition(newPosition);
 }
 
 //~~~update movement ~~~
@@ -66,9 +94,11 @@ void Player::updateMovement(){
         this->shape.move(0.f, this->movementSpeed);
     }
     
+    this->windowBoundaries();
+    
 }
 
-//~~~update movement ~~~
+//~~~update movement player 2~~~
 //Detecting keybord input and moving the player with that input
 void Player::updateMovementPlayer2(){
     //Keybord input
@@ -85,10 +115,22 @@ void Player::updateMovementPlayer2(){
     else if( sf::Keyboard::isKeyPressed (sf::Keyboard::S) ){
         this->shape.move(0.f, this->movementSpeed);
     }
-    
+    this->windowBoundaries();
 }
 
 //~~~Render~~~
 void Player::render(sf::RenderTarget* target){
     target->draw(this->shape);
 }
+
+
+//Access shape outside of private 
+const sf::RectangleShape& Player::getShape() const{
+    return this->shape;
+}
+
+
+
+
+
+//const bool Player::checkCollision(){}

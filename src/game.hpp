@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include "player.hpp"
-
+#include "pointsBall.hpp"
 
 
 /*
@@ -33,31 +33,49 @@ private:
     Player* player1;
     Player* player2;
 
+    //Point balls (swagBalls)
+    std::vector<SwagBall> swagBalls;
+    float spawnTimerMax;
+    float spawnTimer;
+    int maxSpawnBalls;
     
+    //Points or score
+    int pointsPlayer1;
+    int pointsPlayer2;
+        //font and text variable for displaying points
+    sf::Font font;
+    sf::Text guiText;                   
+
     
     //Private methods
-    void initializeVariables();
+        //window
+    void initializeVariables(); 
     void initializeWindow();
+        //player
     void initializePlayer();
-
+        
     
 public:
-    //constructor
+    //game constructor
     Game();
     
-    //destructor
+    //game destructor
     virtual ~Game();
-    
-    //ACCESSORS
-    const bool running()const;
 
     
-    //FUNCTIONS
+    //Methods
+    const bool running()const;
     void updatePlayer();
     void update();
     void renderPlayer();
     void render();
-    
-};
+    void spawnBalls();
+    void updateColision(const Player& player , int& score);
+    void initializeFont();
+    void initializeText();
+    void renderText(sf::RenderTarget* target);
+    void updateText();
 
+
+};
 #endif /* game_hpp */
