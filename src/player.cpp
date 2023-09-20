@@ -28,8 +28,8 @@ void Player::initiateShape(sf::Color a){
 //~~~initiate variable~~~
 void Player::initiateVariable(){
     this->movementSpeed=5.f;
-    this->hpMax = 10;
-    this->hp = hpMax;
+//    this->hpMax = 10;
+//    this->hp = hpMax;
 }
 
 
@@ -118,6 +118,13 @@ void Player::updateMovementPlayer2(){
     this->windowBoundaries();
 }
 
+//~~~Kill~~~
+void Player::kill(){
+    auto killPosition = shape.getPosition();
+    shape.setPosition(640, 360);
+}
+
+
 //~~~Render~~~
 void Player::render(sf::RenderTarget* target){
     target->draw(this->shape);
@@ -128,9 +135,3 @@ void Player::render(sf::RenderTarget* target){
 const sf::RectangleShape& Player::getShape() const{
     return this->shape;
 }
-
-
-
-
-
-//const bool Player::checkCollision(){}

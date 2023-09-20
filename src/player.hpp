@@ -31,11 +31,10 @@ private:
     sf::RectangleShape shape;
     void initiateShape(sf::Color a);
     void initiateVariable();
-    float movementSpeed;
     
     //player health
-    int hp;
-    int hpMax;
+//    int hp;
+//    int hpMax;
 
     
     
@@ -45,18 +44,24 @@ public:
     Player(float x = 0.f, float y = 0.f, sf::Color a = sf::Color::Green);
     ~Player();
     
-//FUNCTIONS
-void updateMovement();
-void updateMovementPlayer2();
 
-void update();
-void updateP2();
-
-void render(sf::RenderTarget* target);
+    float movementSpeed;
     
-const bool checkCollision();
-const sf::RectangleShape& getShape() const;
-void windowBoundaries(); 
+    
+    //Methods
+    void updateMovement();
+    void updateMovementPlayer2();
+
+    void update();
+    void updateP2();
+
+    void render(sf::RenderTarget* target);
+        
+    const bool checkCollision();
+    const sf::RectangleShape& getShape() const;
+    void windowBoundaries();
+        
+    void kill();
 
 };
 #endif /* player_hpp */

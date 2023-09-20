@@ -54,6 +54,7 @@ Game::Game(){
     //Create and initialize font
     this->initializeFont();
     this->initializeText();
+
     
     
 }
@@ -80,10 +81,11 @@ Game::~Game(){
 //~~~Initialize player~~~
 void Game::initializePlayer(){
     
-    this->player1 = new Player();
-    this->player2 = new Player(400.f, 200.f, sf::Color::Red);
+    this->player1 = new Player(1080.f, 520.f, sf::Color::Blue);
+    this->player2 = new Player(280.f, 520.f, sf::Color::Red);
 
 }
+
 
 //~~~update player~~~
 void Game::updatePlayer(){
@@ -123,9 +125,10 @@ void Game::spawnBalls(){
     }
     
 }
+
 //BALL -> PLAYER COLLISION
 //check for collison between players and balls, then remove balls from vector of balls
-void Game::updateColision(const Player& player , int& score){
+void Game::updateCollision(Player& player , unsigned int& score){
     //check the collision
         //iterate through the entire vector of balls
     for( size_t i =0; i < this->swagBalls.size(); i++){
@@ -136,12 +139,40 @@ void Game::updateColision(const Player& player , int& score){
             //delete ball
             this->swagBalls.erase(this->swagBalls.begin() + i);
             
+            
+            
             //Add to points total when ball is deleted
             score++;
+            player.movementSpeed += .5;
         }
     }
-    
 }
+
+//PLAYER -> PLAYER COLLISION
+//check for collison between players and balls, then remove balls from vector of balls
+void Game::PVPCollision(Player& player1 , Player& player2, unsigned int& scoreP1, unsigned int& scoreP2){
+    //check the collision of players
+    if(player1.getShape().getGlobalBounds().intersects(player2.getShape().getGlobalBounds())){
+            
+            //respawn and reset score
+            if (scoreP1 > scoreP2 && scoreP2 > 0){
+                player2.kill();
+                scoreP2--;
+                player2.movementSpeed = 5.f;
+                scoreP1++;
+    
+            }
+            
+            if (scoreP2 > scoreP1 && scoreP1 > 0){
+                player1.kill();
+                scoreP1--;
+                player1.movementSpeed = 5.f;
+                scoreP2++;
+            }
+        }
+    }
+
+
 
 //      PrInTiNg TeXt
 //****************************
@@ -161,6 +192,8 @@ void Game::initializeText(){
     this->guiText.setFillColor(sf::Color::White);
     //font size
     this->guiText.setCharacterSize(50);
+    
+    this->guiText.setPosition(520, 20);
     //text
     //this->guiText.setString("test");
 }
@@ -176,8 +209,8 @@ void Game::updateText(){
     //s-stream that allows us to shove in all types of data and it will turn it into a string
     std::stringstream ss;
     
-    ss <<"Player 1 Score: " << this->pointsPlayer1 << "\n";
-    ss <<"Player 2 Score: " << this->pointsPlayer2;
+    ss <<"P1 Score: " << this->pointsPlayer1 << "\n";
+    ss <<"P2 Score: " << this->pointsPlayer2;
 
     
     this->guiText.setString(ss.str());
@@ -185,6 +218,10 @@ void Game::updateText(){
     
 }
 
+void Game::setUpTiles(){
+    mazeVec.push_back(new GameTile(600, 200));
+    mazeVec.push_back(new GameTile(300, 200));
+}
 
 
 
@@ -196,6 +233,11 @@ void Game::updateText(){
 const bool Game::running()const{
     return this->window->isOpen();
 }
+
+//timer
+sf::Clock clock1;
+
+sf::Time elapsed1 = clock1.getElapsedTime();
 
 //~~~UPDATE function~~~
 // This function handles events (e.g., closing the window) and updates game logic
@@ -215,16 +257,23 @@ void Game::update(){
     //Calling updatePlayer
     this->updatePlayer();
     
+    //Calling the tiles for maze
+    this->setUpTiles();
+    
     //Calling point balls
     this->spawnBalls();
     
     //checking for collison
-    this->updateColision(*player1, pointsPlayer1);
-    this->updateColision(*player2, pointsPlayer2);
+    this->PVPCollision(*player1, *player2, pointsPlayer1, pointsPlayer2);
+    this->updateCollision(*player1, pointsPlayer1);
+    this->updateCollision(*player2, pointsPlayer2);
+    
 
     
     //print text
     this->updateText();
+    
+    
 }
 
 
@@ -247,8 +296,14 @@ void Game::render(){
         i.render(*this->window);
     }
     
+        //render maze
+    for(auto i : this->mazeVec){
+        i->render(this->window);
+    }
+    
+    
             //render gui/text
-    this->renderText(this->window);                //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    this->renderText(this->window);
     
     // Tells app to update the window's display with the new frame
     window->display();

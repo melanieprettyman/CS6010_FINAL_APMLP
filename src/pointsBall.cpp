@@ -13,7 +13,7 @@
 
 //Initiate point balls to be small and white
 void SwagBall::initiateShape(const sf::RenderWindow& window){
-    this->shape.setRadius(25.f);
+    this->shape.setRadius(20.f);
     this->shape.setFillColor(sf::Color::White);
     //randomize postion
     this->shape.setPosition(
