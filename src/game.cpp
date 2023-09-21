@@ -97,10 +97,10 @@ void Game::initializePlayer(){
 
 
 bool Game::player1Wins(unsigned int& scoreP1){
-    return scoreP1 >= 5;
+    return scoreP1 >= 6;
 }
 bool Game::player2Wins(unsigned int& scoreP2){
-    return scoreP2 >= 5;
+    return scoreP2 >= 6;
 }
 
 //~~~update player~~~
@@ -109,7 +109,7 @@ void Game::updatePlayer(){
     this->player1->update();
     this->player2->updateP2();
     
-    if(player1Wins(pointsPlayer1) || player2Wins(pointsPlayer1)){
+    if(player1Wins(pointsPlayer1) || player2Wins(pointsPlayer2)){
         this->endGame =true;
     }
 }
@@ -158,7 +158,7 @@ void Game::updateCollision(Player& player , unsigned int& score){
             this->swagBalls.erase(this->swagBalls.begin() + i);
             //Add to points total when ball is deleted
             score++;
-            player.movementSpeed += .5;
+            player.movementSpeed += 1;
             if (player.movementSpeed >= 15){
                 player.movementSpeed = 15;
             }
@@ -184,7 +184,7 @@ void Game::PVPCollision(Player& player1 , Player& player2, unsigned int& scoreP1
                 player1.kill();
                 scoreP1--;
                 player1.movementSpeed = 4.f;
-                scoreP2 = scoreP2;
+                scoreP2 = scoreP2 + 2;
             }
         }
     }
@@ -206,7 +206,7 @@ void Game::initializeText(){
     //gui text init
     this->guiText.setFont(this->font);
     //color the font
-    this->guiText.setFillColor(sf::Color::White);
+    this->guiText.setFillColor(sf::Color::Black);
     //font size
     this->guiText.setCharacterSize(50);
     
@@ -214,7 +214,7 @@ void Game::initializeText(){
     
     //end game text
     this->endGameText.setFont(this->font);
-    this->endGameText.setFillColor(sf::Color::Red);
+    this->endGameText.setFillColor(sf::Color::Blue);
     this->endGameText.setCharacterSize(100);
     this->endGameText.setPosition(300, 300);
 }
@@ -346,11 +346,6 @@ void Game::updateWallCollision(Player& player, unsigned int& score) {
 const bool Game::running()const{
     return this->window->isOpen();
 }
-
-//timer
-sf::Clock clock1;
-
-sf::Time elapsed1 = clock1.getElapsedTime();
 
 //~~~UPDATE function~~~
 // This function handles events (e.g., closing the window) and updates game logic

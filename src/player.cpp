@@ -29,8 +29,6 @@ void Player::initiateShape(sf::Color a){
 //~~~initiate variable~~~
 void Player::initiateVariable(){
     this->movementSpeed=5.f;
-//    this->hpMax = 10;
-//    this->hp = hpMax;
 }
 
 
