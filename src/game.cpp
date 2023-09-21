@@ -23,7 +23,7 @@ void Game::initializeVariables(){
     //Point Balls initiate
     spawnTimerMax = 10.f;
     spawnTimer = this->spawnTimerMax; //ensures first ball is spawned directly
-    maxSpawnBalls = 10;
+    maxSpawnBalls = 7;
     
     //points or score
     this->pointsPlayer1 = 0;
@@ -97,10 +97,10 @@ void Game::initializePlayer(){
 
 
 bool Game::player1Wins(unsigned int& scoreP1){
-    return scoreP1 >= 10;
+    return scoreP1 >= 5;
 }
 bool Game::player2Wins(unsigned int& scoreP2){
-    return scoreP2 >= 10;
+    return scoreP2 >= 5;
 }
 
 //~~~update player~~~
@@ -159,8 +159,8 @@ void Game::updateCollision(Player& player , unsigned int& score){
             //Add to points total when ball is deleted
             score++;
             player.movementSpeed += .5;
-            if (player.movementSpeed >= 10){
-                player.movementSpeed = 10;
+            if (player.movementSpeed >= 15){
+                player.movementSpeed = 15;
             }
         }
     }
@@ -184,7 +184,7 @@ void Game::PVPCollision(Player& player1 , Player& player2, unsigned int& scoreP1
                 player1.kill();
                 scoreP1--;
                 player1.movementSpeed = 4.f;
-                scoreP2 = scoreP2 + 2;
+                scoreP2 = scoreP2;
             }
         }
     }

@@ -31,7 +31,6 @@ SwagBall::SwagBall(const sf::RenderWindow& window){
 
 //~~~Destructor~~~
 SwagBall::~SwagBall(){
-    std::cout << "swag ball is deleted!!\n";
 }
 
  
