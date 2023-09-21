@@ -11,6 +11,7 @@
 #include <stdio.h>
 #pragma once
 
+
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -31,6 +32,7 @@ private:
     sf::RectangleShape shape;
     void initiateShape(sf::Color a);
     void initiateVariable();
+    
     
     //player health
 //    int hp;
@@ -58,7 +60,7 @@ public:
     void render(sf::RenderTarget* target);
         
     const bool checkCollision();
-    const sf::RectangleShape& getShape() const;
+    sf::RectangleShape& getShape();
     void windowBoundaries();
         
     void kill();

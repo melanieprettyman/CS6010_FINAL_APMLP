@@ -39,7 +39,7 @@ public:
     //Methods
     void render(sf::RenderTarget* target);
 
-    const sf::RectangleShape& getShape() const;
+     sf::RectangleShape& getShape();
 
     
 };

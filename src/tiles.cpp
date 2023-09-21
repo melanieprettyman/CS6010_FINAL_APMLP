@@ -34,7 +34,7 @@ void GameTile::render(sf::RenderTarget* target){
 
 
 //Access shape outside of private
-const sf::RectangleShape& GameTile::getShape() const{
+ sf::RectangleShape& GameTile::getShape(){
     return this->wall;
 }
 

@@ -7,6 +7,7 @@
 
 #include "player.hpp"
 
+
 //Construtor
 Player::Player(float x, float y, sf::Color a){
     this->shape.setPosition(x,y);
@@ -132,6 +133,6 @@ void Player::render(sf::RenderTarget* target){
 
 
 //Access shape outside of private 
-const sf::RectangleShape& Player::getShape() const{
+sf::RectangleShape& Player::getShape() {
     return this->shape;
 }

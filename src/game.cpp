@@ -268,26 +268,41 @@ void Game::setUpTiles(){
 
 }
 
-//WALL -> PLAYER COLLISION
-//check for collison between players and walls, then sets speed to zero
-void Game::updateWallCollision(Player& player){
-    //check the collision
-        //iterate through the entire vector of balls
-    for( size_t i =0; i < this->mazeVec.size(); i++){
-        //check each ball for a collision with the player
-        //get shape, bounds of shape, and checking for intersection with another obj
-        if(player.getShape().getGlobalBounds().intersects(this->mazeVec[i]->getShape().getGlobalBounds())){
-            
-            //delete ball
-            player.movementSpeed = 2;
 
-            
-            
+//WALL -> PLAYER COLLISION
+void Game::updateWallCollision(Player& player) {
+
+    //check the collision
+        //iterate through the entire vector of walls
+    for (size_t i = 0; i < this->mazeVec.size(); i++) {
+        sf::RectangleShape& wallShape = this->mazeVec[i]->getShape();
+        
+        //check each player for a collision with the wall
+            //get shape, bounds of shape, and checking for intersection with another
+        if (player.getShape().getGlobalBounds().intersects(wallShape.getGlobalBounds())) {
+            // Calculate the intersection between the player and the wall
+            sf::FloatRect intersection;
+            if(player.getShape().getGlobalBounds().intersects(wallShape.getGlobalBounds(), intersection)) {
+                // Adjust the player's position to prevent collision
+                if (intersection.width < intersection.height) {
+                    // Adjust horizontally
+                    if (player.getShape().getPosition().x < wallShape.getPosition().x) {
+                        player.getShape().move(-(intersection.width + 1), 0); // Move left of the wall
+                    } else {
+                        player.getShape().move(intersection.width + 1, 0); // Move right of the wall
+                    }
+                } else {
+                    // Adjust vertically
+                    if (player.getShape().getPosition().y < wallShape.getPosition().y) {
+                        player.getShape().move(0, -(intersection.height + 1)); // Move above the wall
+                    } else {
+                        player.getShape().move(0, intersection.height + 1); // Move below the wall
+                    }
+                }
+            }
         }
     }
 }
-
-
 
 
 //        GaMe
