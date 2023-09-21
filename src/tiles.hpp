@@ -29,17 +29,17 @@ class GameTile{
 private:
     
     sf::RectangleShape wall;
-    void initiateShape();
+    void initiateShape(float w, float l);
     
 public:
     //Construtor
-    GameTile(float x,float y);
+    GameTile(float x,float y, float w, float l);
     ~GameTile();
     
     //Methods
     void render(sf::RenderTarget* target);
 
-
+    const sf::RectangleShape& getShape() const;
 
     
 };

@@ -33,7 +33,7 @@ void Game::initializeVariables(){
 //~~~Initialize window~~~
 void Game::initializeWindow(){
     // Create a new SFML RenderWindow with a specified size, title, and window style
-    this->window = new sf::RenderWindow(sf::VideoMode(1280, 720), "Game", sf::Style::Titlebar | sf::Style::Close);
+    this->window = new sf::RenderWindow(sf::VideoMode(1280, 900), "Game", sf::Style::Titlebar | sf::Style::Close);
     
     this->window->setFramerateLimit(60);
 }
@@ -138,9 +138,6 @@ void Game::updateCollision(Player& player , unsigned int& score){
             
             //delete ball
             this->swagBalls.erase(this->swagBalls.begin() + i);
-            
-            
-            
             //Add to points total when ball is deleted
             score++;
             player.movementSpeed += .5;
@@ -218,10 +215,78 @@ void Game::updateText(){
     
 }
 
+//        WalLs
+//****************************
+
 void Game::setUpTiles(){
-    mazeVec.push_back(new GameTile(600, 200));
-    mazeVec.push_back(new GameTile(300, 200));
+    //Boarder
+    mazeVec.push_back(new GameTile(0, 0, 13.f, 768.f));
+    mazeVec.push_back(new GameTile(0, 0, 284.f, 13.f));
+    mazeVec.push_back(new GameTile(426, 0, 853.f, 13.f));
+    mazeVec.push_back(new GameTile(1266,0, 13.f, 800.f));
+    mazeVec.push_back(new GameTile(0,765, 995.f, 13.f));
+    mazeVec.push_back(new GameTile(1137,765, 142.f, 13.f));
+    
+    //inner level 1
+    mazeVec.push_back(new GameTile(142, 80, 142.f, 13.f));
+    mazeVec.push_back(new GameTile(426, 82, 715.f, 13.f));
+    mazeVec.push_back(new GameTile(1136, 80, 13.f, 700.f));
+    mazeVec.push_back(new GameTile(142,680, 1007.f, 13.f));
+    mazeVec.push_back(new GameTile(142, 80, 13.f, 250.f));
+    mazeVec.push_back(new GameTile(142,515, 13.f, 177.f));
+    
+    //inner level 2
+    mazeVec.push_back(new GameTile(260, 160, 720.f, 13.f));
+    mazeVec.push_back(new GameTile(980, 160, 13.f, 420.f));
+    mazeVec.push_back(new GameTile(280, 580, 713.f, 13.f));
+    mazeVec.push_back(new GameTile(280, 500, 13.f, 80.f));
+    mazeVec.push_back(new GameTile(287, 240, 13.f, 175.f));
+
+    //inner level 3
+    mazeVec.push_back(new GameTile(420, 240, 140.f, 15.f));
+    mazeVec.push_back(new GameTile(700, 240, 140.f, 15.f));
+    mazeVec.push_back(new GameTile(840, 240, 15.f, 240.f));
+    mazeVec.push_back(new GameTile(420, 480, 435.f, 15.f));
+    mazeVec.push_back(new GameTile(420, 400, 15.f, 80.f));
+    mazeVec.push_back(new GameTile(420, 400, 80.f, 15.f));
+    mazeVec.push_back(new GameTile(420, 240, 15.f, 80.f));
+    
+    //inner level 4
+    mazeVec.push_back(new GameTile(500, 320, 260.f, 15.f));
+    mazeVec.push_back(new GameTile(760, 320, 15.f, 80.f));
+    mazeVec.push_back(new GameTile(680, 400, 95.f, 15.f));
+
+    //Branches
+    mazeVec.push_back(new GameTile(280, 0, 15.f, 160.f));
+    mazeVec.push_back(new GameTile(420, 0, 15.f, 95.f));
+    mazeVec.push_back(new GameTile(140, 415, 160.f, 15.f));
+    mazeVec.push_back(new GameTile(560, 160, 15.f, 95.f));
+
+    
+
+
+
 }
+
+//WALL -> PLAYER COLLISION
+//check for collison between players and walls, then sets speed to zero
+void Game::updateWallCollision(Player& player){
+    //check the collision
+        //iterate through the entire vector of balls
+    for( size_t i =0; i < this->mazeVec.size(); i++){
+        //check each ball for a collision with the player
+        //get shape, bounds of shape, and checking for intersection with another obj
+        if(player.getShape().getGlobalBounds().intersects(this->mazeVec[i]->getShape().getGlobalBounds())){
+            
+            //delete ball
+            player.movementSpeed = 2;
+
+            
+            
+        }
+    }
+}
+
 
 
 
@@ -273,6 +338,8 @@ void Game::update(){
     //print text
     this->updateText();
     
+    this->updateWallCollision(*player1);
+    
     
 }
 
@@ -309,3 +376,6 @@ void Game::render(){
     window->display();
     
 }
+
+
+

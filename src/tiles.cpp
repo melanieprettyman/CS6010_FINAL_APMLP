@@ -8,8 +8,8 @@
 #include "tiles.hpp"
 
 //Construtor
-GameTile::GameTile(float x,float y){
-    this->initiateShape();
+GameTile::GameTile(float x,float y, float w, float l){
+    this->initiateShape(w,l);
     this->wall.setPosition(x,y);
 }
 
@@ -19,9 +19,9 @@ GameTile::~GameTile(){}
 
 
 //~~~initiate Shape~~~
-void GameTile::initiateShape(){
+void GameTile::initiateShape(float w, float l){
     this->wall.setFillColor(sf::Color::Red);
-    this->wall.setSize(sf::Vector2f(50.f,300.f));
+    this->wall.setSize(sf::Vector2f(w,l));
 }
 
 //~~~Render~~~
@@ -33,5 +33,8 @@ void GameTile::render(sf::RenderTarget* target){
 
 
 
-
+//Access shape outside of private
+const sf::RectangleShape& GameTile::getShape() const{
+    return this->wall;
+}
 

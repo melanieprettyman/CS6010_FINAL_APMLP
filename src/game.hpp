@@ -86,6 +86,8 @@ public:
     void initializeText();
     void renderText(sf::RenderTarget* target);
     void updateText();
+    void updateWallCollision(Player& player);
+
 
 
 };
