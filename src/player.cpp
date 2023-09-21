@@ -54,24 +54,17 @@ void Player::windowBoundaries(){
     auto newPosition = shape.getPosition();
       newPosition.x += 0;
       newPosition.y += 0;
-    
-    //left
-      if(newPosition.x < 0){
-        newPosition.x += 1280;
-      }
-    //right
-      if(newPosition.x > 1280){
-        newPosition.x -= 1280;
        
-      }
     //top
-      if(newPosition.y < 0){
-        newPosition.y += 720;
+      if(newPosition.y < 0 && newPosition.x > 200 && newPosition.x < 450) {
+        newPosition.y += 750;
+          newPosition.x = 1040;
        
       }
     //bottom
-      if(newPosition.y > 720){
-        newPosition.y -= 720;
+      if(newPosition.y > 780 && newPosition.x > 900 && newPosition.x < 1200){
+        newPosition.y -= 780;
+        newPosition.x = 330;
        
       }
       shape.setPosition(newPosition);
@@ -122,7 +115,7 @@ void Player::updateMovementPlayer2(){
 //~~~Kill~~~
 void Player::kill(){
     auto killPosition = shape.getPosition();
-    shape.setPosition(640, 360);
+    shape.setPosition(600, 380);
 }
 
 

@@ -30,7 +30,9 @@ SwagBall::SwagBall(const sf::RenderWindow& window){
 }
 
 //~~~Destructor~~~
-SwagBall::~SwagBall(){}
+SwagBall::~SwagBall(){
+    std::cout << "swag ball is deleted!!\n";
+}
 
  
 /*=============================

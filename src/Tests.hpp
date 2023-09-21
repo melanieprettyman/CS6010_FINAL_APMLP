@@ -9,5 +9,18 @@
 #define Tests_hpp
 
 #include <stdio.h>
+#include <cassert>
+#include "game.hpp"
+
+
+#include <cassert>
+
+
+
+void testsGame();
+
+void testsPlayer();
+
+
 
 #endif /* Tests_hpp */

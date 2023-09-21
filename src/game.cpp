@@ -14,8 +14,10 @@
 
 //~~~Initialize variables~~~
 void Game::initializeVariables(){
+    this->endGame = false;
+    
     // Initialize a pointer for the game window
-    this->window = nullptr;
+    //this->window = nullptr;
     
     
     //Point Balls initiate
@@ -33,7 +35,7 @@ void Game::initializeVariables(){
 //~~~Initialize window~~~
 void Game::initializeWindow(){
     // Create a new SFML RenderWindow with a specified size, title, and window style
-    this->window = new sf::RenderWindow(sf::VideoMode(1280, 900), "Game", sf::Style::Titlebar | sf::Style::Close);
+    this->window = new sf::RenderWindow(sf::VideoMode(1280, 780), "Game", sf::Style::Titlebar | sf::Style::Close);
     
     this->window->setFramerateLimit(60);
 }
@@ -63,12 +65,19 @@ Game::Game(){
 Game::~Game(){
     // Cleanup: Delete the game window object when the game ends
     delete this->window;
+    this->window = nullptr;
     
     // Delete created players
     delete this->player1;
+    this->player1 = nullptr;
     delete this->player2;
+    this->player2 = nullptr;
 }
 
+//~~~End Game~~~
+const bool& Game::getEndGame() const{
+    return this->endGame;
+}
 
 
 /*=============================
@@ -87,13 +96,22 @@ void Game::initializePlayer(){
 }
 
 
+bool Game::player1Wins(unsigned int& scoreP1){
+    return scoreP1 >= 10;
+}
+bool Game::player2Wins(unsigned int& scoreP2){
+    return scoreP2 >= 10;
+}
+
 //~~~update player~~~
 void Game::updatePlayer(){
     
     this->player1->update();
     this->player2->updateP2();
-
     
+    if(player1Wins(pointsPlayer1) || player2Wins(pointsPlayer1)){
+        this->endGame =true;
+    }
 }
 
 //~~~Render player~~~
@@ -141,12 +159,14 @@ void Game::updateCollision(Player& player , unsigned int& score){
             //Add to points total when ball is deleted
             score++;
             player.movementSpeed += .5;
+            if (player.movementSpeed >= 10){
+                player.movementSpeed = 10;
+            }
         }
     }
 }
 
 //PLAYER -> PLAYER COLLISION
-//check for collison between players and balls, then remove balls from vector of balls
 void Game::PVPCollision(Player& player1 , Player& player2, unsigned int& scoreP1, unsigned int& scoreP2){
     //check the collision of players
     if(player1.getShape().getGlobalBounds().intersects(player2.getShape().getGlobalBounds())){
@@ -155,16 +175,16 @@ void Game::PVPCollision(Player& player1 , Player& player2, unsigned int& scoreP1
             if (scoreP1 > scoreP2 && scoreP2 > 0){
                 player2.kill();
                 scoreP2--;
-                player2.movementSpeed = 5.f;
-                scoreP1++;
+                player2.movementSpeed = 4.f;
+                scoreP1 = scoreP1 + 2;
     
             }
             
             if (scoreP2 > scoreP1 && scoreP1 > 0){
                 player1.kill();
                 scoreP1--;
-                player1.movementSpeed = 5.f;
-                scoreP2++;
+                player1.movementSpeed = 4.f;
+                scoreP2 = scoreP2 + 2;
             }
         }
     }
@@ -191,8 +211,12 @@ void Game::initializeText(){
     this->guiText.setCharacterSize(50);
     
     this->guiText.setPosition(520, 20);
-    //text
-    //this->guiText.setString("test");
+    
+    //end game text
+    this->endGameText.setFont(this->font);
+    this->endGameText.setFillColor(sf::Color::Red);
+    this->endGameText.setCharacterSize(100);
+    this->endGameText.setPosition(300, 300);
 }
 
 //~~~render text~~~~
@@ -212,6 +236,12 @@ void Game::updateText(){
     
     this->guiText.setString(ss.str());
     
+// Check for player wins and update endGameText accordingly
+    if (player1Wins(pointsPlayer1)) {
+        this->endGameText.setString("PLAYER 1 WINS! ");
+    } else if (player2Wins(pointsPlayer2)) {
+        this->endGameText.setString("PLAYER 2 WINS! ");
+    }
     
 }
 
@@ -230,7 +260,7 @@ void Game::setUpTiles(){
     //inner level 1
     mazeVec.push_back(new GameTile(142, 80, 142.f, 13.f));
     mazeVec.push_back(new GameTile(426, 82, 715.f, 13.f));
-    mazeVec.push_back(new GameTile(1136, 80, 13.f, 700.f));
+    mazeVec.push_back(new GameTile(1136, 82, 13.f, 600.f));
     mazeVec.push_back(new GameTile(142,680, 1007.f, 13.f));
     mazeVec.push_back(new GameTile(142, 80, 13.f, 250.f));
     mazeVec.push_back(new GameTile(142,515, 13.f, 177.f));
@@ -270,7 +300,7 @@ void Game::setUpTiles(){
 
 
 //WALL -> PLAYER COLLISION
-void Game::updateWallCollision(Player& player) {
+void Game::updateWallCollision(Player& player, unsigned int& score) {
 
     //check the collision
         //iterate through the entire vector of walls
@@ -283,6 +313,9 @@ void Game::updateWallCollision(Player& player) {
             // Calculate the intersection between the player and the wall
             sf::FloatRect intersection;
             if(player.getShape().getGlobalBounds().intersects(wallShape.getGlobalBounds(), intersection)) {
+                if(score > 0){
+                    score = score - 1;}
+                }
                 // Adjust the player's position to prevent collision
                 if (intersection.width < intersection.height) {
                     // Adjust horizontally
@@ -302,7 +335,7 @@ void Game::updateWallCollision(Player& player) {
             }
         }
     }
-}
+
 
 
 //        GaMe
@@ -334,28 +367,32 @@ void Game::update(){
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window->close();
     }
     
-    //Calling updatePlayer
-    this->updatePlayer();
-    
-    //Calling the tiles for maze
-    this->setUpTiles();
-    
-    //Calling point balls
-    this->spawnBalls();
-    
-    //checking for collison
-    this->PVPCollision(*player1, *player2, pointsPlayer1, pointsPlayer2);
-    this->updateCollision(*player1, pointsPlayer1);
-    this->updateCollision(*player2, pointsPlayer2);
-    
-
-    
-    //print text
-    this->updateText();
-    
-    this->updateWallCollision(*player1);
-    
-    
+    //if this is true, game will stop, otherwise all of these functions will
+    //be updated
+    if(this->endGame == false){
+        //Calling updatePlayer
+        this->updatePlayer();
+        
+        //Calling the tiles for maze
+        this->setUpTiles();
+        
+        //Calling point balls
+        this->spawnBalls();
+        
+        //checking for collison
+        this->PVPCollision(*player1, *player2, pointsPlayer1, pointsPlayer2);
+        this->updateCollision(*player1, pointsPlayer1);
+        this->updateCollision(*player2, pointsPlayer2);
+        
+        
+        
+        //print text
+        this->updateText();
+        
+        this->updateWallCollision(*player1, pointsPlayer1);
+        this->updateWallCollision(*player2, pointsPlayer2);
+        
+    }
 }
 
 
@@ -365,9 +402,10 @@ void Game::update(){
 // This function handles rendering game objects and updating the display
 
 void Game::render(){
-    
+    sf::Color backgroundColor(255, 182, 193,255); // RGB values for light pink
+
     // Clear the previous frame with a red background
-    window->clear();
+    window->clear(backgroundColor);
     
     //DRAW YOUR GAME OBJECTS
             //player
@@ -384,8 +422,14 @@ void Game::render(){
     }
     
     
-            //render gui/text
+    //render gui/text
     this->renderText(this->window);
+    
+    //render endGame text
+    if(this->endGame == true){
+        this->window->draw(this->endGameText);
+    }
+    
     
     // Tells app to update the window's display with the new frame
     window->display();

@@ -22,17 +22,19 @@
 class Game
 {
     
+    
 private:
-
-//VARIABLES
+    
+    //VARIABLES
     //Window
     sf::RenderWindow* window; //window pointer
     sf::Event event;
+    bool endGame;
     
     //Player
     Player* player1;
     Player* player2;
-
+    
     //Point balls (swagBalls)
     std::vector<SwagBall> swagBalls;
     float spawnTimerMax;
@@ -46,11 +48,12 @@ private:
     
     //font and text variable for displaying points
     sf::Font font;
-    sf::Text guiText;                   
-
+    sf::Text guiText;
+    sf::Text endGameText; 
+    
     
     //walls
-    GameTile* tile;
+   // GameTile* tile;
     std::vector<GameTile*> mazeVec;
     //function to set up tiles on maze
     void setUpTiles();
@@ -70,7 +73,10 @@ public:
     
     //game destructor
     virtual ~Game();
-
+    
+    //end game
+    const bool& getEndGame() const;
+    
     
     //Methods
     const bool running()const;
@@ -86,9 +92,51 @@ public:
     void initializeText();
     void renderText(sf::RenderTarget* target);
     void updateText();
-    void updateWallCollision(Player& player);
-
-
-
+    void updateWallCollision(Player& player, unsigned int& score);
+    bool player1Wins(unsigned int& scoreP1);
+    bool player2Wins(unsigned int& scoreP2);
+    
+    
+    
+    //TESTS
+    //Get methods to test private variables
+    
+    int getPointsPlayer1() const {
+        return pointsPlayer1;
+    }
+    
+    int getPointsPlayer2() const {
+        return pointsPlayer2;
+    }
+    
+    float getSpawnTimerMax() const {
+        return spawnTimerMax;
+    }
+    
+    float getSpawnTimer() const {
+        return spawnTimer;
+    }
+    
+    int getMaxSpawnBalls() const {
+        return maxSpawnBalls;
+    }
+    
+    Player* getPlayer1() const {
+        return player1;
+    }
+    
+    Player* getPlayer2() const {
+        return player2;
+    }
+    
+    sf::RenderWindow* getWindow() {
+        return window;
+    }
+    
+    std::vector<GameTile*>& getMazeVec() {
+        return mazeVec;
+    }
+    
 };
+    
 #endif /* game_hpp */

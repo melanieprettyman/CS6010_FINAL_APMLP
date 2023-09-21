@@ -20,7 +20,7 @@ GameTile::~GameTile(){}
 
 //~~~initiate Shape~~~
 void GameTile::initiateShape(float w, float l){
-    this->wall.setFillColor(sf::Color::Red);
+    this->wall.setFillColor(sf::Color(182, 110, 243, 128));
     this->wall.setSize(sf::Vector2f(w,l));
 }
 

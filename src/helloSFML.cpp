@@ -1,6 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include "game.hpp"
 
+
+//updated maze to be more accurate
+//added in tests for game class and player class
+//ending game/player death
+//changed background color and tile color 
 int main()
 {
     //seed random number generator
