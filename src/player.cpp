@@ -7,12 +7,21 @@
 
 #include "player.hpp"
 
-
 //Construtor
-Player::Player(float x, float y, sf::Color a){
-    this->shape.setPosition(x,y);
-    this->initiateShape(a);
-    this->initiateVariable();
+Player::Player(float x, float y,float player){
+    this->sprite.setPosition(x,y);
+    this->sprite2.setPosition(x,y);
+    // Set the scale for both sprites
+        this->sprite.setScale(1, 1);
+        this->sprite2.setScale(1, 1);
+
+    
+    if (player == 1){
+        this->initiatePlayer1(player);
+    }
+    if(player ==2){
+        this->initiatePlayer2(player);
+    }
 }
 
 //Destructor
@@ -21,10 +30,33 @@ Player::~Player(){}
 
 
 //~~~initiate Shape~~~
-void Player::initiateShape(sf::Color a){
-    this->shape.setFillColor(a);
-    this->shape.setSize(sf::Vector2f(50.f,50.f));
+void Player::initiatePlayer1(float player){
+    //this->shape.setFillColor(a);
+    //this->shape.setSize(sf::Vector2f(30.f,45.f));
+    
+    if (!texture.loadFromFile("player1.png"))
+    {
+        std::cout << "Failed to load player texture!" << std::endl;
+        
+    }
+        sprite.setTexture(texture);
+        this->initiateVariable();
+    }
+    
+    
+
+
+void Player::initiatePlayer2(float player){
+
+    if (!texture2.loadFromFile("player2.png"))
+    {
+        std::cout << "Failed to load player texture!" << std::endl;
+
+    }
+        sprite2.setTexture(texture2);
+        this->initiateVariable();
 }
+
 
 //~~~initiate variable~~~
 void Player::initiateVariable(){
@@ -49,7 +81,7 @@ void Player::updateP2(){
 
 //~~~window boundaries ~~~
 void Player::windowBoundaries(){
-    auto newPosition = shape.getPosition();
+    auto newPosition = sprite.getPosition();
       newPosition.x += 0;
       newPosition.y += 0;
        
@@ -65,8 +97,30 @@ void Player::windowBoundaries(){
         newPosition.x = 330;
        
       }
-      shape.setPosition(newPosition);
+      sprite.setPosition(newPosition);
 }
+
+//~~~window boundaries ~~~
+void Player::windowBoundaries2(){
+    auto newPosition = sprite2.getPosition();
+      newPosition.x += 0;
+      newPosition.y += 0;
+       
+    //top
+      if(newPosition.y < 0 && newPosition.x > 200 && newPosition.x < 450) {
+        newPosition.y += 750;
+          newPosition.x = 1040;
+       
+      }
+    //bottom
+      if(newPosition.y > 780 && newPosition.x > 900 && newPosition.x < 1200){
+        newPosition.y -= 780;
+        newPosition.x = 330;
+       
+      }
+      sprite2.setPosition(newPosition);
+}
+
 
 //~~~update movement ~~~
 //Detecting keybord input and moving the player with that input
@@ -74,16 +128,16 @@ void Player::updateMovement(){
     //Keybord input
     //left
     if( sf::Keyboard::isKeyPressed (sf::Keyboard::Left) ){
-        this->shape.move(-this->movementSpeed, 0.f);
+        this->sprite.move(-this->movementSpeed, 0.f);
     }
     else if( sf::Keyboard::isKeyPressed (sf::Keyboard::Right) ){
-        this->shape.move(this->movementSpeed, 0.f);
+        this->sprite.move(this->movementSpeed, 0.f);
     }
     if( sf::Keyboard::isKeyPressed (sf::Keyboard::Up) ){
-        this->shape.move(0.f, -this->movementSpeed);
+        this->sprite.move(0.f, -this->movementSpeed);
     }
     else if( sf::Keyboard::isKeyPressed (sf::Keyboard::Down) ){
-        this->shape.move(0.f, this->movementSpeed);
+        this->sprite.move(0.f, this->movementSpeed);
     }
     
     this->windowBoundaries();
@@ -96,34 +150,35 @@ void Player::updateMovementPlayer2(){
     //Keybord input
     //left
     if( sf::Keyboard::isKeyPressed (sf::Keyboard::A) ){
-        this->shape.move(-this->movementSpeed, 0.f);
+        this->sprite2.move(-this->movementSpeed, 0.f);
     }
     else if( sf::Keyboard::isKeyPressed (sf::Keyboard::D) ){
-        this->shape.move(this->movementSpeed, 0.f);
+        this->sprite2.move(this->movementSpeed, 0.f);
     }
     if( sf::Keyboard::isKeyPressed (sf::Keyboard::W) ){
-        this->shape.move(0.f, -this->movementSpeed);
+        this->sprite2.move(0.f, -this->movementSpeed);
     }
     else if( sf::Keyboard::isKeyPressed (sf::Keyboard::S) ){
-        this->shape.move(0.f, this->movementSpeed);
+        this->sprite2.move(0.f, this->movementSpeed);
     }
     this->windowBoundaries();
-}
-
-//~~~Kill~~~
-void Player::kill(){
-    auto killPosition = shape.getPosition();
-    shape.setPosition(600, 380);
 }
 
 
 //~~~Render~~~
 void Player::render(sf::RenderTarget* target){
-    target->draw(this->shape);
+    target->draw(this->sprite);
+    target->draw(this->sprite2);
+
 }
 
 
 //Access shape outside of private 
-sf::RectangleShape& Player::getShape() {
-    return this->shape;
+sf::Sprite& Player::getShape() {
+    return this->sprite;
+}
+
+//Access shape outside of private
+sf::Sprite& Player::getShapeP2() {
+    return this->sprite2;
 }

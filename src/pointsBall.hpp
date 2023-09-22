@@ -19,6 +19,9 @@ private:
     sf::CircleShape shape;
     void initiateShape(const sf::RenderWindow& window);
     
+    sf::Sprite sprite;
+    sf::Texture texture ;
+    
 public:
     SwagBall(const sf::RenderWindow& window);
     ~SwagBall();
@@ -26,8 +29,8 @@ public:
     //Methods
     void update();
     void render(sf::RenderTarget& target);
-    const sf::CircleShape& getShape() const;
-
+    const sf::Sprite& getShape() const;
+    
 };
 
 

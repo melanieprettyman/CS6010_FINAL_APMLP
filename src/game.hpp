@@ -86,13 +86,18 @@ public:
     void render();
     void spawnBalls();
     void spawnBadBalls();
-    void updateCollision(Player& player , unsigned int& score);
-    void PVPCollision(Player& player1 , Player& player2, unsigned int& scoreP1, unsigned int& scoreP2);
+    void updateCollision(sf::Sprite& playerSprite, unsigned int& score);
+    
+    
+//    void PVPCollision(sf::Sprite& player1Sprite, sf::Sprite& player2Sprite, unsigned int& scoreP1, unsigned int& scoreP2);
+    void PVPCollision(sf::Sprite& player1Sprite, sf::Sprite& player2Sprite, unsigned int& scoreP1, unsigned int& scoreP2);
+    
+    
     void initializeFont();
     void initializeText();
     void renderText(sf::RenderTarget* target);
     void updateText();
-    void updateWallCollision(Player& player, unsigned int& score);
+    void updateWallCollision(sf::Sprite& player1Sprite, sf::Sprite& player2Sprite, unsigned int& scoreP1, unsigned int& scoreP2);
     bool player1Wins(unsigned int& scoreP1);
     bool player2Wins(unsigned int& scoreP2);
     

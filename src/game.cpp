@@ -23,7 +23,7 @@ void Game::initializeVariables(){
     //Point Balls initiate
     spawnTimerMax = 10.f;
     spawnTimer = this->spawnTimerMax; //ensures first ball is spawned directly
-    maxSpawnBalls = 7;
+    maxSpawnBalls = 6;
     
     //points or score
     this->pointsPlayer1 = 0;
@@ -90,17 +90,19 @@ const bool& Game::getEndGame() const{
 //~~~Initialize player~~~
 void Game::initializePlayer(){
     
-    this->player1 = new Player(1080.f, 520.f, sf::Color::Blue);
-    this->player2 = new Player(280.f, 520.f, sf::Color::Red);
+    this->player1 = new Player(1080.f, 520.f, 1);
+    
+    this->player2 = new Player(280.f, 520.f, 2);
 
 }
+
 
 
 bool Game::player1Wins(unsigned int& scoreP1){
-    return scoreP1 >= 6;
+    return scoreP1 >= 5;
 }
 bool Game::player2Wins(unsigned int& scoreP2){
-    return scoreP2 >= 6;
+    return scoreP2 >= 5;
 }
 
 //~~~update player~~~
@@ -146,48 +148,60 @@ void Game::spawnBalls(){
 
 //BALL -> PLAYER COLLISION
 //check for collison between players and balls, then remove balls from vector of balls
-void Game::updateCollision(Player& player , unsigned int& score){
-    //check the collision
-        //iterate through the entire vector of balls
-    for( size_t i =0; i < this->swagBalls.size(); i++){
+void Game::updateCollision(sf::Sprite& playerSprite, unsigned int& score) {
+    // Check for collision
+         //iterate through the entire vector of balls
+
+    for (size_t i = 0; i < this->swagBalls.size(); i++) {
         //check each ball for a collision with the player
         //get shape, bounds of shape, and checking for intersection with another obj
-        if(player.getShape().getGlobalBounds().intersects(this->swagBalls[i].getShape().getGlobalBounds())){
-            
-            //delete ball
+        if(playerSprite.getGlobalBounds().intersects(this->swagBalls[i].getShape().getGlobalBounds())) {
+            // Delete ball
             this->swagBalls.erase(this->swagBalls.begin() + i);
-            //Add to points total when ball is deleted
+            // Add to points total when the ball is deleted
             score++;
-            player.movementSpeed += 1;
-            if (player.movementSpeed >= 15){
-                player.movementSpeed = 15;
-            }
+    
+
         }
     }
 }
 
-//PLAYER -> PLAYER COLLISION
-void Game::PVPCollision(Player& player1 , Player& player2, unsigned int& scoreP1, unsigned int& scoreP2){
-    //check the collision of players
-    if(player1.getShape().getGlobalBounds().intersects(player2.getShape().getGlobalBounds())){
-            
-            //respawn and reset score
-            if (scoreP1 > scoreP2 && scoreP2 > 0){
-                player2.kill();
-                scoreP2--;
-                player2.movementSpeed = 4.f;
-                scoreP1 = scoreP1 + 2;
-    
+
+void Game::PVPCollision(sf::Sprite& player1Sprite, sf::Sprite& player2Sprite, unsigned int& scoreP1, unsigned int& scoreP2) {
+    static bool collisionHandled = false; // Static flag to track collision handling
+
+    // Check the collision of players
+    if (player1Sprite.getGlobalBounds().intersects(player2Sprite.getGlobalBounds())) {
+        if (!collisionHandled) {
+            // Collision is happening, handle it
+            collisionHandled = true;
+
+            // Respawn and reset score for player 2
+            if (scoreP1 > scoreP2 && scoreP2 > 0) {
+                // Respawn player 2 by setting its position
+                player2Sprite.setPosition(600.f, 380.f);
+
+                scoreP2 = scoreP2 - 1;
+                scoreP1 += 2; // Increase player 1's score by 2
             }
-            
-            if (scoreP2 > scoreP1 && scoreP1 > 0){
-                player1.kill();
-                scoreP1--;
-                player1.movementSpeed = 4.f;
-                scoreP2 = scoreP2 + 2;
+
+            // Respawn and reset score for player 1
+            if (scoreP2 > scoreP1 && scoreP1 > 0) {
+                // Respawn player 1 by setting its position
+                player1Sprite.setPosition(600.f, 380.f);
+
+                scoreP1 = scoreP1 - 1;
+                scoreP2 = scoreP2 + 2; // Increase player 2's score by 2
             }
         }
+    } else {
+        // No collision, reset the flag
+        collisionHandled = false;
     }
+}
+
+
+
 
 
 
@@ -300,41 +314,69 @@ void Game::setUpTiles(){
 
 
 //WALL -> PLAYER COLLISION
-void Game::updateWallCollision(Player& player, unsigned int& score) {
-
-    //check the collision
-        //iterate through the entire vector of walls
+void Game::updateWallCollision(sf::Sprite& player1Sprite, sf::Sprite& player2Sprite, unsigned int& scoreP1, unsigned int& scoreP2) {
+    // Check the collision
+    // Iterate through the entire vector of walls
     for (size_t i = 0; i < this->mazeVec.size(); i++) {
         sf::RectangleShape& wallShape = this->mazeVec[i]->getShape();
-        
-        //check each player for a collision with the wall
-            //get shape, bounds of shape, and checking for intersection with another
-        if (player.getShape().getGlobalBounds().intersects(wallShape.getGlobalBounds())) {
-            // Calculate the intersection between the player and the wall
+
+        // Check each player for a collision with the wall
+        // Get bounds of the shape and check for intersection with another
+        if (player1Sprite.getGlobalBounds().intersects(wallShape.getGlobalBounds())) {
+            // Calculate the intersection between player1 and the wall
             sf::FloatRect intersection;
-            if(player.getShape().getGlobalBounds().intersects(wallShape.getGlobalBounds(), intersection)) {
-                if(score > 0){
-                    score = score - 1;}
+            if (player1Sprite.getGlobalBounds().intersects(wallShape.getGlobalBounds(), intersection)) {
+                if (scoreP1 > 0) {
+                    scoreP1--;
                 }
                 // Adjust the player's position to prevent collision
                 if (intersection.width < intersection.height) {
                     // Adjust horizontally
-                    if (player.getShape().getPosition().x < wallShape.getPosition().x) {
-                        player.getShape().move(-(intersection.width + 1), 0); // Move left of the wall
+                    if (player1Sprite.getPosition().x < wallShape.getPosition().x) {
+                        player1Sprite.move(-(intersection.width + 1), 0); // Move left of the wall
                     } else {
-                        player.getShape().move(intersection.width + 1, 0); // Move right of the wall
+                        player1Sprite.move(intersection.width + 1, 0); // Move right of the wall
                     }
                 } else {
                     // Adjust vertically
-                    if (player.getShape().getPosition().y < wallShape.getPosition().y) {
-                        player.getShape().move(0, -(intersection.height + 1)); // Move above the wall
+                    if (player1Sprite.getPosition().y < wallShape.getPosition().y) {
+                        player1Sprite.move(0, -(intersection.height + 1)); // Move above the wall
                     } else {
-                        player.getShape().move(0, intersection.height + 1); // Move below the wall
+                        player1Sprite.move(0, intersection.height + 1); // Move below the wall
+                    }
+                }
+            }
+        }
+
+        // Repeat the same collision detection and adjustment logic for player2
+        if (player2Sprite.getGlobalBounds().intersects(wallShape.getGlobalBounds())) {
+            // Calculate the intersection between player2 and the wall
+            sf::FloatRect intersection;
+            if (player2Sprite.getGlobalBounds().intersects(wallShape.getGlobalBounds(), intersection)) {
+                if (scoreP2 > 0) {
+                    scoreP2--;
+                }
+                // Adjust the player's position to prevent collision
+                if (intersection.width < intersection.height) {
+                    // Adjust horizontally
+                    if (player2Sprite.getPosition().x < wallShape.getPosition().x) {
+                        player2Sprite.move(-(intersection.width + 1), 0); // Move left of the wall
+                    } else {
+                        player2Sprite.move(intersection.width + 1, 0); // Move right of the wall
+                    }
+                } else {
+                    // Adjust vertically
+                    if (player2Sprite.getPosition().y < wallShape.getPosition().y) {
+                        player2Sprite.move(0, -(intersection.height + 1)); // Move above the wall
+                    } else {
+                        player2Sprite.move(0, intersection.height + 1); // Move below the wall
                     }
                 }
             }
         }
     }
+}
+
 
 
 
@@ -374,18 +416,20 @@ void Game::update(){
         //Calling point balls
         this->spawnBalls();
         
-        //checking for collison
-        this->PVPCollision(*player1, *player2, pointsPlayer1, pointsPlayer2);
-        this->updateCollision(*player1, pointsPlayer1);
-        this->updateCollision(*player2, pointsPlayer2);
-        
+        this->PVPCollision(player1->getShape(), player2->getShapeP2(), pointsPlayer1, pointsPlayer2);
+
+        // Assuming you want to call this for player1
+        this->updateCollision(player1->getShape(), pointsPlayer1);
+        // Assuming you want to call this for player2
+        this->updateCollision(player2->getShapeP2(), pointsPlayer2);
+
         
         
         //print text
         this->updateText();
         
-        this->updateWallCollision(*player1, pointsPlayer1);
-        this->updateWallCollision(*player2, pointsPlayer2);
+        this->updateWallCollision(player1->getShape(), player2->getShapeP2(), pointsPlayer1, pointsPlayer2);
+
         
     }
 }

@@ -25,45 +25,61 @@
 #include <SFML/Network.hpp>
 
 
-class Player{
+    class Player{
 
-private:
-    //player characteristics
-    sf::RectangleShape shape;
-    void initiateShape(sf::Color a);
-    void initiateVariable();
-    
-    
-    //player health
-//    int hp;
-//    int hpMax;
+    private:
+        //player characteristics
+        sf::RectangleShape shape;
+        void initiatePlayer1(float player);
+        void initiatePlayer2(float player);
 
-    
-    
-    
+        void initiateVariable();
+        sf::Sprite sprite;
+        sf::Texture texture ;
+        sf::Sprite sprite2;
+        sf::Texture texture2;
+        
+        
+        
+        
 
-public:
-    Player(float x = 0.f, float y = 0.f, sf::Color a = sf::Color::Green);
-    ~Player();
-    
+    public:
+        Player(float x = 0.f, float y = 0.f, float p = 0.f);
+        ~Player();
+        
 
-    float movementSpeed;
-    
-    
-    //Methods
-    void updateMovement();
-    void updateMovementPlayer2();
+        float movementSpeed;
+        
+        
+        //Methods
+        void updateMovement();
+        void updateMovementPlayer2();
 
-    void update();
-    void updateP2();
+        void update();
+        void updateP2();
+
+        
+            
+        const bool checkCollision();
+        
+        void windowBoundaries();
+        void windowBoundaries2();
+
+        
+            
+        void kill();
+        void killP2();
+
+        //Access shape outside of private
+        sf::Sprite& getShape();
+        sf::Sprite& getShapeP2();
+
 
     void render(sf::RenderTarget* target);
         
-    const bool checkCollision();
-    sf::RectangleShape& getShape();
-    void windowBoundaries();
         
-    void kill();
+
+        
 
 };
 #endif /* player_hpp */
