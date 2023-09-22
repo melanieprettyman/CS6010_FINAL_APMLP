@@ -161,7 +161,7 @@ void Player::updateMovementPlayer2(){
     else if( sf::Keyboard::isKeyPressed (sf::Keyboard::S) ){
         this->sprite2.move(0.f, this->movementSpeed);
     }
-    this->windowBoundaries();
+    this->windowBoundaries2();
 }
 
 

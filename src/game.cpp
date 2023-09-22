@@ -141,6 +141,7 @@ void Game::spawnBalls(){
             this->swagBalls.push_back( SwagBall(*this->window) );
             //reset to spawn another ball
             this->spawnTimer = 0.f;
+        
         }
     }
     
